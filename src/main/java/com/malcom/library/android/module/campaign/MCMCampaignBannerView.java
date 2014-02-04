@@ -103,6 +103,58 @@ public class MCMCampaignBannerView extends SmartImageView {
         return campaign;
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        try {
+            Drawable drawable = getDrawable();
+
+            if (drawable == null) {
+                setMinimumVisibleDimension();
+            } else {
+                fitImageForFillKeepingAspectRatio(widthMeasureSpec, heightMeasureSpec, drawable);
+            }
+        } catch (Exception e) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
+    }
+
+    private void setMinimumVisibleDimension() {
+		// It should be higher than 0 because the remote image start load when this view become visible
+        setMeasuredDimension(1, 1);
+    }
+
+    private void fitImageForFillKeepingAspectRatio(int widthMeasureSpec, int heightMeasureSpec, Drawable drawable) {
+        float imageAspectRatio = getImageAspectRatio(drawable);
+        float viewAspectRatio = getViewAspectRatio(widthMeasureSpec, heightMeasureSpec);
+        if (imageAspectRatio >= viewAspectRatio) {
+            // Image is wider than the display (ratio)
+            fitImageForViewWidthAndAspectRatio(widthMeasureSpec, imageAspectRatio);
+        } else {
+            // Image is taller than the display (ratio)
+            fitImageForViewHeightAndAspectRatio(heightMeasureSpec, imageAspectRatio);
+        }
+    }
+
+    private float getImageAspectRatio(Drawable drawable) {
+        return (float)drawable.getIntrinsicWidth() / (float)drawable.getIntrinsicHeight();
+    }
+
+    private float getViewAspectRatio(int widthMeasureSpec, int heightMeasureSpec) {
+        return (float) MeasureSpec.getSize(widthMeasureSpec) / (float) MeasureSpec.getSize(heightMeasureSpec);
+    }
+
+    private void fitImageForViewHeightAndAspectRatio(int heightMeasureSpec, float imageSideRatio) {
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        int width = (int)(height * imageSideRatio);
+        setMeasuredDimension(width, height);
+    }
+
+    private void fitImageForViewWidthAndAspectRatio(int widthMeasureSpec, float imageSideRatio) {
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = (int)(width / imageSideRatio);
+        setMeasuredDimension(width, height);
+    }
+
     public interface MCMCampaignBannerDelegate {
 
         /**
