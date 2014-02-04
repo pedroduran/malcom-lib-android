@@ -1,15 +1,11 @@
 package com.malcom.library.android.module.campaign;
 
-import android.R;
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.loopj.android.image.SmartImageTask;
 import com.loopj.android.image.SmartImageView;
